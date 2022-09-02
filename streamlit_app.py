@@ -6,7 +6,7 @@ import numpy as np
 
 
 
-@st.experimental_memo(ttl=12*3600)
+@st.experimental_memo(ttl=48*3600)
 def load_data():
     
     data_2021 = pd.read_csv('2021.csv')
@@ -26,10 +26,19 @@ def load_data():
 st.set_page_config(page_title="Swiss Energy Prices", layout="wide")
 
 with st.sidebar:
-    st.markdown(f'### Swiss Energy Usage and Prices Information')
+    st.markdown('##### About')
+    st.markdown(f'This dashboard visualises energy prices in Switzerland using [SwissGrid Energy Statistics](https://www.swissgrid.ch/en/home/customers/topics/energy-data-ch.html) published publicly. '+
+      "\nData are available in granularity of 15 minutes, which we then aggregate per day. "
+    + "\nThe prices we visualise are those of the [control power markets](https://www.swissgrid.ch/en/home/operation/market/control-energy.html) namely secondary and tertiary control energy prices. "
+    + "Hopefully, these measures can act as proxy to the actual consumer price that is not published by SwissGrid. ")
 
 data_2022, data_2021, data_2020, data_2019 = load_data()
 
+
+st.title(f'Swiss Energy Usage and Prices Information')
+
+
+st.markdown(f'##### Dates')
 
 last_day = list(data_2022['Date'].tail(1))[0]
 last_day = datetime.datetime.strptime(last_day, r'%Y-%m-%d %H:%M:%S')
@@ -55,6 +64,7 @@ st.markdown('##### Target')
 agg_field= 'DayOfYear'
 
 price_types = {'APSCEP': 'Positive Secondary', 'ANSCEP': 'Negative Seconday', 'APTCEP': 'Positive Tertiary', 'ANTCEP': 'Negative Tertiary'}
+price_types = {k:v+' Control Energy Price' for k,v in price_types.items()}
 agg_target = st.selectbox(label='Price type', options=['APSCEP', 'ANSCEP', 'APTCEP', 'ANTCEP'], \
     format_func=lambda _:price_types[_])
 
@@ -95,7 +105,7 @@ fig.update_layout(
     yaxis_title="Price",
     legend_title="Year",
     font=dict(
-        family="Courier New, monospace",
+        #family="Courier New, monospace",
         #size=18,
         #color="RebeccaPurple"
     )
