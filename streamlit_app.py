@@ -73,6 +73,7 @@ agg_target = st.selectbox(label='Price type', options=['APSCEP', 'ANSCEP', 'APTC
 agg_fn = st.selectbox(label='Aggregate to daily', options=['Median', 'AVG', 'Min', 'Max'])
 
 interpolate = st.checkbox(label='Interpolate zero and missing values', value=True)
+smooth = st.checkbox(label='7-day moving average', value=False)
 
 
 st.markdown('##### Years')
@@ -96,9 +97,13 @@ for year,data in years.items():
     result = duckdb.query(f'select {agg_field}, {agg_fn}({agg_target}) as Price, Min({agg_target}) as "Min Price", Max({agg_target}) as "Max Price" \
          from data where {agg_field}<=\'{to_day}\' and {agg_field}>=\'{from_day}\'  group by {agg_field} order by {agg_field} asc').to_df()
     if interpolate: result['Price'] = result['Price'].apply(lambda n: np.nan if n==0 else n).interpolate(method='linear')
+    if smooth: 
+        result['Smooth Price'] = result['Price'].rolling(7).mean()
+        fig.add_trace(go.Scatter(x=result[agg_field],  y=result['Smooth Price'] , name=f"{year}", mode='lines', opacity=1.0))
+
     #fig.add_trace(go.Scatter(x=result[agg_field],  y=result['Min Price'] , name=f"{year}", mode='lines', fill=None , showlegend=False))
     #fig.add_trace(go.Scatter(x=result[agg_field],  y=result['Max Price'] , name=f"{year}", mode='lines', fillcolor='rgba(68, 68, 68, 0.3)',fill='tonexty',showlegend=False ))
-    fig.add_trace(go.Scatter(x=result[agg_field],  y=result['Price'] , name=f"{year}", mode='lines'))
+    fig.add_trace(go.Scatter(x=result[agg_field],  y=result['Price'] , name=f"{year}", mode='lines', opacity=0.1 if smooth else 1.0, showlegend= not smooth))
 
 fig.update_layout(
     title=f"Price of the SwissGrid {price_types[agg_target]} between {range_start} and {range_end} ",
@@ -106,8 +111,8 @@ fig.update_layout(
     yaxis_title="Price",
     legend_title="Year",
     font=dict(
-        family="Courier New, monospace",
-        #size=18,
+        family="Helvetica, monospace",
+        #size=16,
         #color="RebeccaPurple"
     )
 )
