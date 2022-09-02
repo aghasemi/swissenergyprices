@@ -30,7 +30,8 @@ with st.sidebar:
     st.markdown(f'This dashboard visualises energy prices in Switzerland using [SwissGrid Energy Statistics](https://www.swissgrid.ch/en/home/customers/topics/energy-data-ch.html) published publicly. '+
       "\nData are available in granularity of 15 minutes, which we then aggregate per day. "
     + "\nThe prices we visualise are those of the [control power markets](https://www.swissgrid.ch/en/home/operation/market/control-energy.html) namely secondary and tertiary control energy prices. "
-    + "Hopefully, these measures can act as proxy to the actual consumer price that is not published by SwissGrid. ")
+    + "Hopefully, these measures can act as proxy to the actual consumer price that is not published by SwissGrid. "
+    + "\n\nFeel free to [contact me](https://twitter.com/a_ghasemi) if you have ideas to improve this.")
 
 data_2022, data_2021, data_2020, data_2019 = load_data()
 
@@ -69,7 +70,7 @@ agg_target = st.selectbox(label='Price type', options=['APSCEP', 'ANSCEP', 'APTC
     format_func=lambda _:price_types[_])
 
 
-agg_fn = st.selectbox(label='Aggregate to', options=['Median', 'AVG', 'Min', 'Max'])
+agg_fn = st.selectbox(label='Aggregate to daily', options=['Median', 'AVG', 'Min', 'Max'])
 
 interpolate = st.checkbox(label='Interpolate zero and missing values', value=True)
 
@@ -105,7 +106,7 @@ fig.update_layout(
     yaxis_title="Price",
     legend_title="Year",
     font=dict(
-        #family="Courier New, monospace",
+        family="Courier New, monospace",
         #size=18,
         #color="RebeccaPurple"
     )
