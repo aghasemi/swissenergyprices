@@ -28,8 +28,8 @@ st.set_page_config(page_title="Swiss Energy Prices", layout="wide")
 with st.sidebar:
     st.markdown('##### About')
     st.markdown(f'This dashboard visualises energy prices in Switzerland using [SwissGrid Energy Statistics](https://www.swissgrid.ch/en/home/customers/topics/energy-data-ch.html) published publicly. '+
-      "\nData are available in granularity of 15 minutes, which we then aggregate per day. "
-    + "\nThe prices we visualise are those of the [control power markets](https://www.swissgrid.ch/en/home/operation/market/control-energy.html) namely secondary and tertiary control energy prices. "
+      "\n\nData are available in granularity of 15 minutes, which we then aggregate per day. "
+    + "\n\nThe prices we visualise are those of the [control power markets](https://www.swissgrid.ch/en/home/operation/market/control-energy.html) namely secondary and tertiary control energy prices. "
     + "Hopefully, these measures can act as proxy to the actual consumer price that is not published by SwissGrid. "
     + "\n\nFeel free to [contact me](https://twitter.com/a_ghasemi) if you have ideas to improve this.")
 
