@@ -1,1 +1,1 @@
-# Dasboards for Swiss Energy Prices 
+# Dashboards for Swiss Energy Prices 
