@@ -6,7 +6,7 @@ import numpy as np
 
 
 
-@st.experimental_memo(ttl=48*3600)
+@st.cache
 def load_data():
     
     data_2021 = pd.read_csv('2021.csv')
